@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8 col-lg-7">
+        <div class="glass-panel p-5 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 opacity-25 p-4" style="z-index: 0;">
+                <i class="bi bi-basket text-primary" style="font-size: 10rem;"></i>
+            </div>
+            
+            <div class="position-relative" style="z-index: 1;">
+                <div class="d-flex align-items-center mb-4">
+                    <a href="{% url 'donor_dashboard' %}" class="btn btn-outline-light btn-sm rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" title="Back to Dashboard">
+                        <i class="bi bi-arrow-left fs-5"></i>
+                    </a>
+                    <h2 class="mb-0" style="color: var(--primary-color);">{{ title }}</h2>
+                </div>
+                
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        {% for field in form %}
+                            <div class="col-md-{% if field.name == 'food_name' or field.name == 'location' %}12{% else %}6{% endif %} mb-3">
+                                <label class="form-label text-muted fw-bold">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                <div class="text-danger small mt-1">{{ field.errors.as_text }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary-custom w-100 mt-4 py-2 fs-5 shadow">Save Food List</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="glass-panel p-5">
+            <h2 class="text-center mb-4" style="color: var(--primary-color);">Welcome Back</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label text-muted">Username</label>
+                    <input type="text" name="username" class="form-control" autofocus required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary-custom w-100 mb-3">Login</button>
+            </form>
+            <p class="text-center text-muted mb-0">Don't have an account? <a href="{% url 'register' %}" style="color: var(--secondary-color);">Register here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

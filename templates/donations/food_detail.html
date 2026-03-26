@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Food Details - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-10 col-lg-8">
+        <div class="glass-panel p-0 overflow-hidden shadow-lg border-0">
+            <!-- Header Image Area (abstract dark gradient for food) -->
+            <div class="p-5 d-flex align-items-end" style="height: 250px; background: linear-gradient(135deg, rgba(26,26,46,0.9) 0%, rgba(42,42,78,0.7) 100%), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') center/cover no-repeat; position: relative;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+                <div class="position-relative z-1 w-100 d-flex justify-content-between align-items-end">
+                    <div>
+                        <span class="badge bg-success mb-2 px-3 py-2 rounded-pill shadow-sm fs-6">Available</span>
+                        <h1 class="text-white mb-0 fw-bold drop-shadow">{{ food.food_name }}</h1>
+                    </div>
+                    <div class="text-end drop-shadow text-white">
+                        <small class="d-block text-white-50">Listed by</small>
+                        <strong>{{ food.donor.username }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 bg-dark bg-opacity-75">
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start h-100 p-4 border border-secondary border-opacity-25 rounded-3 bg-white bg-opacity-10">
+                            <i class="bi bi-geo-alt fs-2 me-4 text-warning" style="color: var(--accent-color) !important;"></i>
+                            <div>
+                                <h6 class="text-muted mb-1 fw-bold text-uppercase letter-spacing-1">Pickup Location</h6>
+                                <p class="mb-0 fs-5 text-white">{{ food.location }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start h-100 p-4 border border-secondary border-opacity-25 rounded-3 bg-white bg-opacity-10">
+                            <i class="bi bi-clock-history fs-2 me-4 text-info" style="color: var(--secondary-color) !important;"></i>
+                            <div>
+                                <h6 class="text-muted mb-1 fw-bold text-uppercase letter-spacing-1">Available Time</h6>
+                                <p class="mb-0 fs-5 text-white">{{ food.available_time }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start h-100 p-4 border border-secondary border-opacity-25 rounded-3 bg-white bg-opacity-10">
+                            <i class="bi bi-box-seam fs-2 me-4 text-primary" style="color: var(--primary-color) !important;"></i>
+                            <div>
+                                <h6 class="text-muted mb-1 fw-bold text-uppercase letter-spacing-1">Quantity/Amount</h6>
+                                <p class="mb-0 fs-5 text-white">{{ food.quantity }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start h-100 p-4 border border-secondary border-opacity-25 rounded-3 bg-white bg-opacity-10">
+                            <i class="bi bi-person-lines-fill fs-2 me-4 text-success" style="color: #4CAF50 !important;"></i>
+                            <div>
+                                <h6 class="text-muted mb-1 fw-bold text-uppercase letter-spacing-1">Contact Details</h6>
+                                <p class="mb-0 fs-5 text-white">{{ food.contact_details }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-4 border-top border-secondary border-opacity-25">
+                    <a href="{% url 'acceptor_dashboard' %}" class="btn btn-outline-light rounded-pill px-4 py-2">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                    
+                    {% if user.role == 'ACCEPTOR' and food.status == 'AVAILABLE' %}
+                        <button type="button" class="btn btn-primary-custom btn-lg px-5 shadow-lg rounded-pill" data-bs-toggle="modal" data-bs-target="#claimModal">
+                            <i class="bi bi-check-circle me-2"></i>Claim This Food
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Claim Confirmation Modal -->
+<div class="modal fade" id="claimModal" tabindex="-1" aria-labelledby="claimModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-panel border-0 shadow-lg" style="background-color: var(--dark-bg);">
+            <div class="modal-header border-bottom border-secondary border-opacity-25">
+                <h5 class="modal-title text-white" id="claimModalLabel">Confirm Claim</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-question-circle text-warning display-4"></i>
+                </div>
+                <p class="text-center text-white fs-5 px-3">Are you sure you want to claim <strong>{{ food.food_name }}</strong>?</p>
+                <p class="text-center text-muted small px-4">By claiming this, you agree to pick up the food at the specified time and location.</p>
+            </div>
+            <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
+                <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'claim_food' food.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary-custom rounded-pill px-5 shadow">Confirm & Claim</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .drop-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+    .letter-spacing-1 { letter-spacing: 1px; }
+    .bg-opacity-10 { --bs-bg-opacity: 0.1; }
+</style>
+{% endblock %}

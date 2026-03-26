@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Food - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-panel p-5 text-center">
+            <i class="bi bi-exclamation-triangle-fill text-danger display-1 mb-4 d-block" style="color: var(--primary-color) !important;"></i>
+            
+            <h2 class="mb-4" style="color: white;">Delete Food Donation</h2>
+            
+            <p class="fs-5 text-muted mb-4">Are you sure you want to delete <strong class="text-white">"{{ food.food_name }}"</strong>?</p>
+            <p class="text-danger small mb-5">This action cannot be undone. Acceptors will no longer be able to claim this item.</p>
+            
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'donor_dashboard' %}" class="btn btn-outline-light rounded-pill px-4">Cancel</a>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary-custom rounded-pill px-4" style="background: linear-gradient(45deg, #ff4d4d, #cc0000);">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

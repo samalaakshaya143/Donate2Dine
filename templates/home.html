@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row align-items-center min-vh-75 mt-5">
+    <div class="col-lg-6 mb-5 mb-lg-0">
+        <h1 class="display-3 fw-bold mb-4" style="color: var(--primary-color);">
+            Share Food.<br>
+            <span style="color: var(--secondary-color);">Share Hope.</span>
+        </h1>
+        <p class="lead mb-5 text-muted" style="color: #b0b0b0 !important;">
+            Welcome to Donate2Dine, the platform connecting generous donors with those in need. Whether you have surplus food or are looking for a meal, we bridge the gap.
+        </p>
+        <div class="d-flex gap-3">
+            <a href="{% url 'register' %}" class="btn btn-primary-custom btn-lg px-4">Get Started</a>
+            <a href="{% url 'login' %}" class="btn btn-secondary-custom btn-lg px-4">Login</a>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="glass-panel p-5 text-center position-relative overflow-hidden">
+            <div class="position-absolute top-0 start-0 w-100 h-100 opacity-25" style="background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%);"></div>
+            <i class="bi bi-basket-fill" style="font-size: 8rem; color: var(--accent-color); position: relative; z-index: 1;"></i>
+            <h3 class="mt-4 mb-3 position-relative" style="z-index: 1;">Join the Movement</h3>
+            <p class="mb-0 text-muted position-relative" style="z-index: 1; color: #a1a1a1 !important;">Over 10,000 meals shared this month alone.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 text-center g-4">
+    <div class="col-md-4">
+        <div class="glass-panel p-4 h-100">
+            <i class="bi bi-heart text-primary fs-1 mb-3 d-block" style="color: var(--primary-color) !important;"></i>
+            <h4>Become a Donor</h4>
+            <p class="text-muted small">List your excess food and make an impact in your local community.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-panel p-4 h-100">
+            <i class="bi bi-search text-info fs-1 mb-3 d-block" style="color: var(--secondary-color) !important;"></i>
+            <h4>Find Food</h4>
+            <p class="text-muted small">Search for available food donations in your area instantly.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-panel p-4 h-100">
+            <i class="bi bi-chat-dots text-warning fs-1 mb-3 d-block" style="color: var(--accent-color) !important;"></i>
+            <h4>Connect</h4>
+            <p class="text-muted small">Chat securely with donors or acceptors to arrange pickup.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

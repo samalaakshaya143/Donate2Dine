@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Acceptor Dashboard - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row mb-5 align-items-center">
+    <div class="col-md-7">
+        <h2 style="color: var(--secondary-color);">Find Food Donations</h2>
+        <p class="text-muted">Search and claim food available in your area.</p>
+    </div>
+    <div class="col-md-5">
+        <form method="get" class="d-flex">
+            <input type="text" name="q" class="form-control me-2 rounded-pill px-4 py-2" placeholder="Search by food name..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary-custom rounded-pill">Search</button>
+        </form>
+    </div>
+</div>
+
+<ul class="nav nav-pills mb-4 gap-2" id="dashboardTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-pill px-4" id="available-tab" data-bs-toggle="pill" data-bs-target="#available" type="button" role="tab" style="background-color: transparent; border: 1px solid var(--secondary-color); color: var(--secondary-color);" onclick="this.style.backgroundColor='var(--secondary-color)'; this.style.color='var(--dark-bg)'; document.getElementById('claimed-tab').style.backgroundColor='transparent'; document.getElementById('claimed-tab').style.color='var(--primary-color)';">Available Food</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="claimed-tab" data-bs-toggle="pill" data-bs-target="#claimed" type="button" role="tab" style="background-color: transparent; border: 1px solid var(--primary-color); color: var(--primary-color);" onclick="this.style.backgroundColor='var(--primary-color)'; this.style.color='white'; document.getElementById('available-tab').style.backgroundColor='transparent'; document.getElementById('available-tab').style.color='var(--secondary-color)';">My Claims</button>
+    </li>
+</ul>
+
+<div class="tab-content mt-4" id="dashboardTabsContent">
+    <!-- Available Food Tab -->
+    <div class="tab-pane fade show active" id="available" role="tabpanel">
+        {% if available_food %}
+        <div class="row g-4">
+            {% for food in available_food %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-panel p-4 h-100 d-flex flex-column food-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-info rounded-circle p-3 me-3 d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                            <i class="bi bi-gift fs-4 text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 text-truncate" style="color: var(--secondary-color);" title="{{ food.food_name }}">{{ food.food_name }}</h4>
+                            <small class="text-muted">Donor: {{ food.donor.username }}</small>
+                        </div>
+                    </div>
+                    
+                    <ul class="list-unstyled text-muted small mb-4">
+                        <li class="mb-2"><i class="bi bi-clock me-2"></i>{{ food.available_time }}</li>
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i>{{ food.location }}</li>
+                        <li class="mb-2"><i class="bi bi-hash me-2"></i>{{ food.quantity }}</li>
+                    </ul>
+
+                    <div class="mt-auto pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+                        <a href="{% url 'food_detail' food.pk %}" class="btn btn-outline-info w-100 rounded-pill">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-panel p-5 text-center my-4">
+            <i class="bi bi-search text-muted display-1 mb-3 d-block"></i>
+            <h4 class="text-white">No food available</h4>
+            <p class="text-muted">There are no food donations available matching your criteria.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- My Claims Tab -->
+    <div class="tab-pane fade" id="claimed" role="tabpanel">
+        {% if my_claims %}
+        <div class="row g-4">
+            {% for claim in my_claims %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-panel p-4 h-100 d-flex flex-column" style="border-left: 4px solid var(--primary-color);">
+                    <h5 class="mb-1" style="color: var(--text-color);">{{ claim.food_item.food_name }}</h5>
+                    <p class="small text-muted mb-3">Claimed on {{ claim.claimed_at|date:"M d, Y" }}</p>
+                    
+                    <div class="bg-dark bg-opacity-50 p-3 rounded mb-3">
+                        <small class="d-block mb-1"><i class="bi bi-person me-2"></i>Donor: <strong>{{ claim.food_item.donor.username }}</strong></small>
+                        <small class="d-block"><i class="bi bi-telephone me-2"></i>Contact: {{ claim.food_item.contact_details }}</small>
+                    </div>
+
+                    <a href="{% url 'chat_thread' claim.food_item.donor.id %}" class="btn btn-primary-custom btn-sm mt-auto">
+                        <i class="bi bi-chat-dots me-2"></i>Message Donor
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-panel p-5 text-center my-4">
+            <i class="bi bi-basket text-muted display-1 mb-3 d-block"></i>
+            <h4 class="text-white">No claims yet</h4>
+            <p class="text-muted">You haven't claimed any food items yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Simple inline script to set initial active tab colors
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('available-tab').style.backgroundColor = 'var(--secondary-color)';
+        document.getElementById('available-tab').style.color = 'var(--dark-bg)';
+    });
+</script>
+{% endblock %}

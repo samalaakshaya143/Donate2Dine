@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Donor Dashboard - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h2 style="color: var(--primary-color);">My Donations</h2>
+        <p class="text-muted">Manage the food you've listed for donation.</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{% url 'add_food' %}" class="btn btn-primary-custom">
+            <i class="bi bi-plus-circle me-2"></i>Add Food Availability
+        </a>
+    </div>
+</div>
+
+{% if food_items %}
+<div class="row g-4">
+    {% for food in food_items %}
+    <div class="col-md-6 col-lg-4">
+        <div class="glass-panel p-4 h-100 position-relative food-card">
+            
+            {% if food.status == 'AVAILABLE' %}
+            <span class="badge bg-success position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">Available</span>
+            {% elif food.status == 'CLAIMED' %}
+            <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">Claimed</span>
+            {% elif food.status == 'COLLECTED' %}
+            <span class="badge bg-secondary position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">Collected</span>
+            {% endif %}
+
+            <div class="d-flex align-items-center mb-3">
+                <div class="bg-primary rounded-circle p-3 me-3 d-flex justify-content-center align-items-center" style="width: 50px; height: 50px; background: linear-gradient(45deg, var(--secondary-color), #2d948d) !important;">
+                    <i class="bi bi-box-seam fs-4 text-white"></i>
+                </div>
+                <h4 class="mb-0 text-truncate" style="color: var(--accent-color);" title="{{ food.food_name }}">{{ food.food_name }}</h4>
+            </div>
+            
+            <ul class="list-unstyled text-muted small mb-4">
+                <li class="mb-2"><i class="bi bi-clock me-2"></i><span style="color: #ccc;">Time:</span> {{ food.available_time }}</li>
+                <li class="mb-2"><i class="bi bi-geo-alt me-2"></i><span style="color: #ccc;">Location:</span> {{ food.location }}</li>
+                <li class="mb-2"><i class="bi bi-hash me-2"></i><span style="color: #ccc;">Quantity:</span> {{ food.quantity }}</li>
+            </ul>
+
+            <div class="d-flex justify-content-between mt-auto">
+                <a href="{% url 'edit_food' food.pk %}" class="btn btn-outline-light btn-sm rounded-pill px-4">Edit</a>
+                <a href="{% url 'delete_food' food.pk %}" class="btn btn-outline-danger btn-sm rounded-pill px-4">Delete</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="glass-panel p-5 text-center mt-5 w-100">
+    <i class="bi bi-inbox text-muted display-1 mb-3 d-block"></i>
+    <h3 class="text-white">No donations yet</h3>
+    <p class="text-muted">Start making a difference by listing your first food donation today!</p>
+    <a href="{% url 'add_food' %}" class="btn btn-primary-custom mt-3">Add First Food Entry</a>
+</div>
+{% endif %}
+{% endblock %}

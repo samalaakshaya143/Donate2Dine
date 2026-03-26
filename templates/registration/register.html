@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Donate2Dine{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-panel p-5">
+            <h2 class="text-center mb-4" style="color: var(--primary-color);">Join Donate2Dine</h2>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="mb-4">
+                    <label class="form-label text-muted" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field.errors }}
+                    
+                    {% if field.name == 'role' %}
+                        <select name="{{ field.name }}" class="form-select" id="{{ field.id_for_label }}">
+                            {% for val, choice in field.field.choices %}
+                                <option style="color: black;" value="{{ val }}" {% if field.value == val %}selected{% endif %}>{{ choice }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <input type="{% if field.name == 'password' %}password{% elif field.name == 'email' %}email{% else %}text{% endif %}" 
+                               name="{{ field.name }}" 
+                               class="form-control" 
+                               id="{{ field.id_for_label }}"
+                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                               {% if field.field.required %}required{% endif %}>
+                    {% endif %}
+                    {% if field.help_text %}
+                    <div class="form-text text-muted small mt-1" style="opacity: 0.7;">{{ field.help_text|safe }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <button type="submit" class="btn btn-primary-custom w-100 mt-3 mb-3">Create Account</button>
+            </form>
+            <p class="text-center text-muted mb-0">Already have an account? <a href="{% url 'login' %}" style="color: var(--secondary-color);">Login here</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Reset auto-fill styles to keep the form dark and transparent */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #2a2a4e inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+</style>
+{% endblock %}
